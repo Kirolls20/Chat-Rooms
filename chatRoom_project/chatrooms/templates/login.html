@@ -1,0 +1,21 @@
+{% include 'base.html' %}
+{% load static %}
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+{% block content %}
+<h1 id="main-page-title">Chat Rooms</h1>
+<form action="{% url 'login' %}" method="post">
+    {% csrf_token %}
+   <div class="form-div">
+    <label for="username" class="form-label">Username</label>
+    <input type="text" name="username" id="username">
+    <label for="password" class="form-label">Password</label>
+    <input type="password" name="password" id="password">
+    <button type="submit" class="sgin-in-btn">Sign in</button>
+    <br><br><br>
+    <p class="sign-up-text">don't have account Create one <a href="{%url 'signup' %}">Sign Up</a></p>
+   </div>
+</form>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% include 'base.html' %}
+{% load static %}
+<head>
+
+    <title>Home</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+{% block content %}
+<h1 id="main-page-title">Chat Rooms</h1>
+<div class="centered-btn">
+    <a href="{% url 'login' %}" id="to-start-btn">To Start</a>
+</div>
+{% endblock %}

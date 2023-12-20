@@ -1,0 +1,30 @@
+{% include 'base.html' %}
+{% load static %}
+<head>
+    <title>SignUp</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+{% block content %}
+<h1 id="main-page-title">Chat Rooms</h1>
+<form action="" method="post">
+    {% csrf_token %}
+   <div class="form-div">
+   {{form.username}}
+   <p class="help-text">Required. 150 characters or less. Letters, numbers and @/./+/-/_ only.</p>
+    {{form.password1}}
+    <p class="help-text">
+        Your password should not be too similar to your personal information.
+        Your password must contain at least 8 characters.
+        Your password should not be a commonly used password.
+        Your password cannot be entirely numeric.
+    </p>
+    {{form.password2}}
+    <p class="help-text">Enter the same password as above.</p>
+   
+    <button type="submit" class="sgin-in-btn">Sign Up</button> 
+    <br><br>
+    <p class="sign-up-text">Return to login page<a href="{%url 'login' %}">Sign in</a></p>
+   </div>
+   <br><br><br>
+</form>
+{% endblock %}

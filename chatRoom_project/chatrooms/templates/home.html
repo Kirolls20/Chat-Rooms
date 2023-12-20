@@ -1,0 +1,77 @@
+{% include 'base.html' %}
+{% load static %}
+<head>
+
+    <title>Home</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+
+{% block content %}
+<div style="float:right;">
+  <p class="log-out">
+    <button class="profile-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-person-circle" viewBox="0 0 16 16">
+        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+      </svg>
+    </button>
+    <span>{{request.user.username}}</span>
+  </p>
+</div>
+<h1 id="main-page-title">Chat Rooms</h1>
+
+<!-- <a href="" class="btn btn-info">Public Groups</a> -->
+
+<p class="d-inline-flex gap-1">
+  <a class="privite-group-btn" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Public Groups</a>
+|
+<a class="public-group-btn" data-bs-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample2">Private Groups</a>
+</p>
+<div class="row">
+  <div class="col">
+    <div class="collapse multi-collapse" id="multiCollapseExample1">
+      <div class="card card-body animated fadeInRight"> <!-- Add the "animated" class for animation -->
+        {% for room in rooms %}
+        <div class="current-room-div">
+          <a href="{% url 'chat_room' room.room_name_id %}">{{ room.name }}</a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- Private Rooms -->
+  <div class="row">
+    <div class="col">
+      <div class="collapse multi-collapse" id="multiCollapseExample2">
+        <div class="card card-body animated fadeInRight">
+        
+          <div class="current-room-div">
+                  <a href="#">Test</a>
+                </div>
+        </div>
+      </div>
+    </div>
+
+<section class="add-room-div">
+  <button class="add-room-btn">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="black" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+    </svg>
+  </button>
+</section>
+<section class="add-room-form">
+  <form action="{% url 'new_room' %}" method="post">
+    {% csrf_token %}
+    <h2 id="add-room-form-title">Add New Room </h2>
+    <label for="room-name" id="add-room-label" style="text-align: left;">
+      <p>Room Name</p>
+    </label>
+    <input type="text" name="room_name" id="room-name">
+    <button type="submit" class="sgin-in-btn" style="display: block;float:left;">Add the living room</button>
+    <button class="btn btn-outline-light" id="cancel-btn">Cancel</button>
+  </form>
+</section>
+<script src="{% static 'js/home.js' %}"></script>
+{% endblock %}

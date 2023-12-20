@@ -1,0 +1,112 @@
+{% include 'base.html' %}
+{% load static %}
+<head>
+
+    <title>Room </title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+
+{% block content %}
+<div style="float:right;">
+    <p class="log-out">
+      <button class="profile-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-person-circle" viewBox="0 0 16 16">
+          <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+          <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+        </svg>
+      </button>
+      <span>{{request.user.username}}</span>
+    </p>
+  </div>
+  <h1 id="main-page-title">Chat Rooms</h1>
+
+<!-- Buttons part -->
+<p class="d-inline-flex gap-1">
+    <a class="privite-group-btn" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Public Groups</a>
+  |
+  <a class="public-group-btn" data-bs-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample2">Private Groups</a>
+  </p>
+  <div class="row">
+    <div class="col">
+      <div class="collapse multi-collapse" id="multiCollapseExample1">
+        <div class="card card-body animated fadeInRight"> <!-- Add the "animated" class for animation -->
+          {% for room in rooms %}
+          <div class="current-room-div">
+            <a href="{% url 'chat_room' room.room_name_id %}">{{ room.name }}</a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+    <!-- Private Rooms -->
+    <div class="row">
+      <div class="col">
+        <div class="collapse multi-collapse" id="multiCollapseExample2">
+          <div class="card card-body animated fadeInRight">
+          
+            <div class="current-room-div">
+                    <a href="#">Test</a>
+                  </div>
+          </div>
+        </div>
+      </div>
+
+
+
+<!-- Messages Part -->
+<section class="messages-div">
+ <div class="messages-list">
+        <form>
+            <ul class="message-box" id="chat-text">
+                {% for message in room_messages %}
+                    <li class="user">{{ message.user.username }}</li>
+                    <li class="message">{{ message.message }}</li>
+                    <li class="date">{{ message.message_date|timesince }} ago</li>
+                {% endfor %}
+            </ul>
+          </div>
+          <div class="form-group">
+            <input class="text-message" id="input" type="text" placeholder="type your message"></br>
+          </div>
+          <input class="send-message-btn" id="submit" type="button" value="Send">
+        </section>
+      </form>
+
+
+
+{{room.room_name_id|json_script:'room-name'}}
+{{request.user.username|json_script:'user-name'}}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
+<script>
+const userUsername= JSON.parse(document.getElementById('user-name').textContent)
+document.querySelector('#submit').onclick = function (e) {
+    const messageInputDom = document.querySelector('#input');
+    const message = messageInputDom.value;
+    chatSocket.send(JSON.stringify({
+        'message': message,
+        'user':userUsername
+    }));
+    messageInputDom.value = '';
+};
+
+const roomName = JSON.parse(document.getElementById('room-name').textContent);
+const chatSocket = new WebSocket(
+    'ws://' +
+    window.location.host +
+    '/ws/chat/' +
+    roomName +
+    '/' 
+);
+
+chatSocket.onmessage = function (e) {
+    data = JSON.parse(e.data);
+    console.log(data);
+    //document.querySelector('#chat-text').value +=( data.user + ':' + data.message + '\n') 
+    $('#chat-text').append('<li class="user">' + data.user + '</li>' +
+            '<li class="message">' + data.message + '</li>' +
+            '<li class="date">' + data.message_date + ' ago</li>');
+};
+</script>
+{% endblock %}
